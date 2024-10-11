@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model UploadedFile {
+  id        String   @id @default(cuid())
+  path      String
+  mimetype  String
+  size      Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Job       Job[]
+}
+
+model Job {
+  id        String        @id @default(cuid())
+  status    JobStatus     @default(PENDING)
+  fileId    String?
+  file      UploadedFile? @relation(fields: [fileId], references: [id])
+  error     Json?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+enum JobStatus {
+  PENDING
+  IN_PROGRESS
+  FAILED
+  COMPLETED
+}

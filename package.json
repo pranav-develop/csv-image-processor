@@ -1,0 +1,33 @@
+{
+  "name": "csv-image-processer",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "node build/index.js",
+    "build": "tsc && tsc-alias",
+    "prisma": "prisma",
+    "dev": "NODE_PATH=./src nodemon --exec 'ts-node' src/index.ts",
+    "db:gen": "npm run prisma generate",
+    "db:migrate": "npm run prisma migrate dev"
+  },
+  "author": "Pranav Shukla",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/express-fileupload": "^1.5.1",
+    "nodemon": "^3.1.7",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.20.0",
+    "@types/node": "^22.7.5",
+    "csv-parser": "^3.0.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "express-fileupload": "^1.5.1",
+    "prisma": "^5.20.0",
+    "uuid": "^10.0.0",
+    "zod": "^3.23.8"
+  }
+}
