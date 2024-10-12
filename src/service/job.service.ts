@@ -1,5 +1,6 @@
 import { Job, JobStatus, UploadedFile } from "@prisma/client";
 import DBClient from "config/DBClient";
+import { JobTypes } from "types/JobTypes";
 
 export default class JobService {
   private static async startJob(job: Job) {
@@ -38,10 +39,12 @@ export default class JobService {
     }
   }
 
-  public static async createJob({ file }: { file: UploadedFile }) {
+  public static async createJob(props: JobTypes.CreateJobInput) {
+    // Creating job of type ProductCSVUpload as there is only one type of job
     const job = await DBClient.getInstance().job.create({
       data: {
-        fileId: file.id,
+        fileId: props.data.file.id,
+        type: props.type,
       },
     });
 

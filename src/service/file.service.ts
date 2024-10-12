@@ -7,20 +7,31 @@ import { BASE_DIRECTORY } from "utils/constants";
 import { getFileValidatorInstance } from "./filevalidator.service";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
+import fetch from "node-fetch";
 
 export default class FileService {
+  private static BASE_DIRECTORY = path.join(BASE_DIRECTORY, "uploads");
   private static UPLOADS_DIR = "uploads";
   private static TEMP_DIR = "temp";
+
+  private static async downloadFile({ url }: { url: string }) {
+    // Download file from url
+    // Return
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to download file: ${response.statusText}`);
+    }
+    const buffer = await response.arrayBuffer();
+    const fileName = path.basename(url);
+    const filePath = path.join(this.BASE_DIRECTORY, this.TEMP_DIR, fileName);
+    fs.writeFileSync(filePath, Buffer.from(buffer));
+    return filePath;
+  }
 
   private static async validateFile(file: fileUpload.UploadedFile) {
     // Saving file to temp disk to validate
     const fileExtension = file.mimetype.split("/")[1];
-    const filePath = path.join(
-      BASE_DIRECTORY,
-      FileService.UPLOADS_DIR,
-      FileService.TEMP_DIR,
-      uuidv4()
-    );
+    const filePath = path.join(this.BASE_DIRECTORY, this.TEMP_DIR, uuidv4());
     const fileLocation = `${filePath}.${fileExtension}`;
     await file.mv(fileLocation);
     console.log("moved file to temp location", fileLocation);
@@ -94,6 +105,8 @@ export default class FileService {
         data: {
           path: filePath,
           size: file.size,
+          originalName: file.name,
+          extension: file.mimetype.split("/")[1],
           mimetype: file.mimetype,
         },
       });

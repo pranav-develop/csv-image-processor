@@ -1,10 +1,8 @@
 import JobController from "controller/job.controller";
 import express from "express";
 
-const router = express.Router();
+const jobRouter = express.Router();
 
-router.post("/create", JobController.createProcessingJobHandler);
+jobRouter.get("/status/:jobId", JobController.checkJobStatusHandler);
 
-router.get("/status/:jobId", JobController.checkJobStatusHandler);
-
-export default router;
+export default jobRouter;

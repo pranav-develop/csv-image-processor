@@ -3,7 +3,6 @@ import FileValidator, { IFileValidatorOptions } from "./FileValidator";
 import { FILE_MIME_TYPE } from "types/GeneralTypes";
 import fs from "fs";
 import csvParser from "csv-parser";
-import InvalidFileError from "errors/InvalidFileError";
 
 export default class CSVFileValidator extends FileValidator {
   static mimeType = FILE_MIME_TYPE.CSV;
