@@ -2,6 +2,7 @@ import { PORT } from "env";
 import express, { Request, Response } from "express";
 import router from "routes";
 import fileUpload from "express-fileupload";
+import FileService from "service/file.service";
 
 const app = express();
 

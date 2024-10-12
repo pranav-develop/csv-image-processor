@@ -14,7 +14,9 @@ export default class ProductService {
     const rawProductsData = csvData.rows.map((row) => {
       return {
         name: row["Product Name"],
-        images: row["Input Image Urls"].split(","),
+        images: row["Input Image Urls"]
+          .split(",")
+          .filter((item: string) => item.length > 0),
       };
     });
 

@@ -1,9 +1,13 @@
 import { Job, JobStatus, UploadedFile } from "@prisma/client";
 import DBClient from "config/DBClient";
 import { JobTypes } from "types/JobTypes";
+import ProcessingService from "./processing.service";
 
 export default class JobService {
-  private static async startJob(job: Job) {
+  private static async startJob(
+    job: Job,
+    data: JobTypes.CreateJobInput["data"]
+  ) {
     try {
       // Updating the job status to IN_PROGRESS
       await DBClient.getInstance().job.update({
@@ -12,8 +16,25 @@ export default class JobService {
       });
 
       // Processing the job
-      // This is a dummy function that waits for 10 seconds
-      await new Promise((resolve) => setTimeout(resolve, 10000));
+      const processingResponses = await Promise.all(
+        data.products.map(async (product) => {
+          const processingService = new ProcessingService();
+          return await processingService.processProductImages({
+            productId: product.id,
+          });
+        })
+      );
+
+      const errors = processingResponses.reduce((acc: string[], curr) => {
+        if (curr.length > 0) {
+          acc.push(...curr);
+        }
+        return acc;
+      }, []);
+
+      if (errors.length > 0) {
+        throw new Error(errors.join(" | "));
+      }
 
       // Updating the job status to COMPLETED
       await DBClient.getInstance().job.update({
@@ -43,12 +64,12 @@ export default class JobService {
     // Creating job of type ProductCSVUpload as there is only one type of job
     const job = await DBClient.getInstance().job.create({
       data: {
-        fileId: props.data.file.id,
+        requestFileId: props.data.file.id,
         type: props.type,
       },
     });
 
-    JobService.startJob(job);
+    JobService.startJob(job, props.data);
 
     return job;
   }

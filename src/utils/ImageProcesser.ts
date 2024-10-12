@@ -13,7 +13,7 @@ export default class ImageProcessor {
     this.processType = processType;
   }
 
-  private createFromData({ filePath }) {
+  private createFormData({ filePath }) {
     const formData = new FormData();
     formData.append("image", fs.createReadStream(filePath));
     formData.append(
@@ -32,7 +32,7 @@ export default class ImageProcessor {
 
   private async makeProcessRequest(formData: FormData) {
     const imageData = await fetchClient<ImagifyAPIResponse>({
-      url: "https://app.imagify.io/api/upload/",
+      url: "https://app.imagify.io/api/upload",
       method: "POST",
       headers: {
         Authorization: `token ${IMAGIFY_API_KEY}`,
@@ -40,8 +40,14 @@ export default class ImageProcessor {
       },
       payload: formData,
     });
+
     if (imageData.code !== 200) {
-      throw new Error("Failed to process image");
+      switch (imageData.code) {
+        case 422:
+          throw new Error("ImageAlready Compressed");
+        case 415:
+          throw new Error("Invalid media format");
+      }
     }
     return imageData;
   }
@@ -58,7 +64,7 @@ export default class ImageProcessor {
       }
 
       //calling the process function
-      const formData = this.createFromData({ filePath: imagePath });
+      const formData = this.createFormData({ filePath: imagePath });
 
       const processedImage = await this.makeProcessRequest(formData);
       return {
@@ -71,7 +77,7 @@ export default class ImageProcessor {
     } catch (e) {
       return {
         success: false,
-        message: e.message,
+        message: `Failed to process image: ${e.message}`,
         data: null,
       };
     }

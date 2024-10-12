@@ -25,6 +25,8 @@ export default class ProductController {
         validateFile: true,
       });
 
+      console.log("Creating products from CSV file", uploadedFile);
+
       const products = await ProductService.createProductFromCSV({
         file: uploadedFile,
       });

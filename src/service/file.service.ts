@@ -10,21 +10,22 @@ import fs from "fs";
 import fetch from "node-fetch";
 
 export default class FileService {
-  private static BASE_DIRECTORY = path.join(BASE_DIRECTORY, "uploads");
+  private static BASE_DIRECTORY = path.join(BASE_DIRECTORY, "src", "assets");
   private static UPLOADS_DIR = "uploads";
   private static TEMP_DIR = "temp";
 
-  private static async downloadFile({ url }: { url: string }) {
-    // Download file from url
-    // Return
+  public static async downloadFile({ url }: { url: string }): Promise<string> {
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error(`Failed to download file: ${response.statusText}`);
+      throw new Error(
+        `Failed to download file with url ${url}: ${response.statusText}`
+      );
     }
     const buffer = await response.arrayBuffer();
     const fileName = path.basename(url);
     const filePath = path.join(this.BASE_DIRECTORY, this.TEMP_DIR, fileName);
     fs.writeFileSync(filePath, Buffer.from(buffer));
+    console.log("file written to disk");
     return filePath;
   }
 
@@ -59,7 +60,7 @@ export default class FileService {
       ],
     });
     // Deleting the file after validation
-    fs.unlinkSync(fileLocation);
+    // fs.unlinkSync(fileLocation);
     if (validator.errors.length > 0) {
       throw new InvalidFileError(validator.errors.join(" | "));
     }
@@ -99,7 +100,7 @@ export default class FileService {
       if (validateFile) {
         await FileService.validateFile(file);
       }
-      const filePath = path.join(BASE_DIRECTORY, FileService.UPLOADS_DIR);
+      const filePath = path.join(this.BASE_DIRECTORY, FileService.UPLOADS_DIR);
       // Storing file in the uploads directory
       uploadedFile = await DBClient.getInstance().uploadedFile.create({
         data: {
