@@ -14,6 +14,14 @@ export default class FileService {
   private static UPLOADS_DIR = "uploads";
   private static TEMP_DIR = "temp";
 
+  public static tempDirectoryPath() {
+    return path.join(this.BASE_DIRECTORY, this.TEMP_DIR);
+  }
+
+  public static uploadsDirectoryPath() {
+    return path.join(this.BASE_DIRECTORY, this.UPLOADS_DIR);
+  }
+
   public static async downloadFile({ url }: { url: string }): Promise<string> {
     const response = await fetch(url);
     if (!response.ok) {
@@ -129,5 +137,9 @@ export default class FileService {
       }
       throw e;
     }
+  }
+
+  public static constructServableFilePath({ file }: { file: UploadedFile }) {
+    return path.join("assets", "file", `${file.id}.${file.extension}`);
   }
 }

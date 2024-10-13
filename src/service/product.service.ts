@@ -9,8 +9,6 @@ export default class ProductService {
       filepath: `${path.join(file.path, file.id)}.${file.extension}`,
     });
 
-    console.log("got products data", JSON.stringify(csvData, null, 2));
-
     const rawProductsData = csvData.rows.map((row) => {
       return {
         name: row["Product Name"],

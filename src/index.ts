@@ -2,7 +2,7 @@ import { PORT } from "env";
 import express, { Request, Response } from "express";
 import router from "routes";
 import fileUpload from "express-fileupload";
-import FileService from "service/file.service";
+import fileRouter from "routes/file.router";
 
 const app = express();
 
@@ -11,6 +11,8 @@ app.use(express.json());
 app.use(fileUpload());
 
 app.use("/api", router);
+
+app.use("/assets/files", fileRouter);
 
 app.get("/health", (req: Request, res: Response) => {
   res.send("OK");

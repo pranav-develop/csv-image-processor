@@ -32,10 +32,6 @@ export class GeneralResponse {
   }
 }
 
-export const sendApiResponse = (
-  res: Response,
-  response: GeneralResponse,
-  error?: Error
-) => {
+export const sendApiResponse = (res: Response, response: GeneralResponse) => {
   return res.status(200).json(response.getResponse());
 };

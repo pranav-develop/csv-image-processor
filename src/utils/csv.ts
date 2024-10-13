@@ -32,4 +32,25 @@ export default class CSVUtils {
         });
     });
   }
+
+  public static createCSVFileFromJson({
+    data,
+    path,
+    filename,
+  }: {
+    data: { headers: string[]; rows: ObjectType[] };
+    path: string;
+    filename: string;
+  }) {
+    // create csv file from json
+    const fileRows: string[] = [];
+    fileRows.push(data.headers.join(","));
+
+    data.rows.forEach((row) => {
+      const values = data.headers.map((header) => row[header]);
+      fileRows.push(values.join(","));
+    });
+
+    fs.writeFileSync(`${path}/${filename}.csv`, fileRows.join("\n"));
+  }
 }

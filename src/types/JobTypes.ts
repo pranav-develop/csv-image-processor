@@ -1,4 +1,4 @@
-import { Product, UploadedFile } from "@prisma/client";
+import { Prisma, Product, UploadedFile } from "@prisma/client";
 
 export namespace JobTypes {
   export enum JobType {
@@ -18,4 +18,11 @@ export namespace JobTypes {
   }
 
   export type CreateJobInput = ProductsCSVCreateJobInput;
+
+  export type JobWithFiles = Prisma.JobGetPayload<{
+    include: {
+      requestFile: true;
+      resultFile: true;
+    };
+  }>;
 }

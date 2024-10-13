@@ -51,6 +51,32 @@ model Product {
   updatedAt DateTime @updatedAt
 }
 
+model WebhookTopic {
+  id        String        @id @default(cuid())
+  topic     WebhookTopics @unique
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  webhooks  Webhook[]
+
+  @@index([topic])
+}
+
+model Webhook {
+  id        String         @id @default(cuid())
+  name      String
+  url       String
+  isActive  Boolean        @default(true)
+  secret    String
+  topics    WebhookTopic[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+enum WebhookTopics {
+  JOB_STARTED
+  JOB_COMPLETED
+}
+
 enum JobStatus {
   PENDING
   IN_PROGRESS

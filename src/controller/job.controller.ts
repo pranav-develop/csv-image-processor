@@ -5,6 +5,7 @@ import fileUpload from "express-fileupload";
 import FileService from "service/file.service";
 import JobService from "service/job.service";
 import ProductService from "service/product.service";
+import { sendErrorResponse } from "utils/errorhandler";
 import { GeneralResponse, sendApiResponse } from "utils/GeneralResponse";
 
 export default class JobController {
@@ -35,14 +36,7 @@ export default class JobController {
       );
     } catch (e) {
       console.error(e);
-      return sendApiResponse(
-        res,
-        new GeneralResponse({
-          data: null,
-          hasError: true,
-          msg: "Internal Server Error",
-        })
-      );
+      return sendErrorResponse(res, e);
     }
   }
 }
