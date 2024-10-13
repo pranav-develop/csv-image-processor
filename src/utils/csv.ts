@@ -11,14 +11,13 @@ export default class CSVUtils {
     headers: string[];
     rows: ObjectType[];
   }> {
-    console.log("got file path", filepath);
     const headers: string[] = [];
     const results: ObjectType[] = [];
     return new Promise((resolve, reject) => {
       fs.createReadStream(filepath)
         .pipe(csvParser())
-        .on("headers", (headers) => {
-          console.log("got headers", headers);
+        .on("headers", (header) => {
+          headers.push(...header);
         })
         .on("data", (data: ObjectType) => results.push(data))
         .on("end", () => {

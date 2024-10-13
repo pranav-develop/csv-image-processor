@@ -47,14 +47,17 @@ export default class JobService {
         },
         {} as ObjectType
       );
-
       const updatedCsvResultData = {
         headers: [...csvData.headers, "Output Image Urls"],
         rows: csvData.rows.map((row) => {
           const images = row["Input Image Urls"].split(",").map((url) => {
             return originalToProcessedImageMapping[url] ?? url;
           });
-          return { ...row, "Output Image Urls": images.join(",") };
+          return {
+            ...row,
+            "Input Image Urls": `"${row["Input Image Urls"]}"`,
+            "Output Image Urls": `"${images.join(",")}"`,
+          };
         }),
       };
 

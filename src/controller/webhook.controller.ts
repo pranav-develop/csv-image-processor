@@ -21,7 +21,14 @@ export default class WebhookController {
         res,
         new GeneralResponse({
           hasError: true,
-          data: webhook,
+          data: {
+            name: webhook.name,
+            id: webhook.id,
+            isActive: webhook.isActive,
+            secret: webhook.secret,
+            createdAt: webhook.createdAt,
+            updatedAt: webhook.updatedAt,
+          },
           msg: "Webhook registered successfully",
           status: 200,
         })
@@ -68,7 +75,9 @@ export default class WebhookController {
         res,
         new GeneralResponse({
           hasError: false,
-          data: null,
+          data: {
+            id: webhookId,
+          },
           msg: "Webhook deleted successfully",
           status: 200,
         })

@@ -10,9 +10,6 @@ export default class FileController {
   ): Promise<any> {
     try {
       const { fileName } = req.params;
-
-      console.log("flieName", fileName);
-
       const path = FileService.uploadsDirectoryPath();
 
       const filePath = `${path}/${fileName}`;

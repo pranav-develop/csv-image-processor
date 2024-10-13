@@ -8,6 +8,7 @@ import { getFileValidatorInstance } from "./filevalidator.service";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
 import fetch from "node-fetch";
+import { WEBSITE_URL } from "env";
 
 export default class FileService {
   private static BASE_DIRECTORY = path.join(BASE_DIRECTORY, "src", "assets");
@@ -43,7 +44,6 @@ export default class FileService {
     const filePath = path.join(this.BASE_DIRECTORY, this.TEMP_DIR, uuidv4());
     const fileLocation = `${filePath}.${fileExtension}`;
     await file.mv(fileLocation);
-    console.log("moved file to temp location", fileLocation);
     const validator = getFileValidatorInstance({
       mimeType: file.mimetype,
     });
@@ -140,6 +140,11 @@ export default class FileService {
   }
 
   public static constructServableFilePath({ file }: { file: UploadedFile }) {
-    return path.join("assets", "file", `${file.id}.${file.extension}`);
+    const filePath = path.join(
+      "assets",
+      "files",
+      `${file.id}.${file.extension}`
+    );
+    return `${WEBSITE_URL}/${filePath}`;
   }
 }
