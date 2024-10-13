@@ -1,1 +1,0 @@
-{"version":3,"file":"InvalidFileError.js","sourceRoot":"","sources":["../../src/errors/InvalidFileError.ts"],"names":[],"mappings":";;AAAA,MAAqB,gBAAiB,SAAQ,KAAK;IACjD,YAAY,OAAe;QACzB,KAAK,CAAC,OAAO,CAAC,CAAC;QACf,IAAI,CAAC,IAAI,GAAG,kBAAkB,CAAC;IACjC,CAAC;CACF;AALD,mCAKC"}
